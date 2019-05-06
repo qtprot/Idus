@@ -1,0 +1,99 @@
+procedure frxDBDatasetAOBESTOnBeforePrint(Sender: TfrxComponent);
+begin
+               //Orderer
+               if Length(<ADOQueryOrderer."AVD_NAMN">) > 0 then
+               begin
+                    if Length( <ADOQueryOrderer."ANV_NAMN">) > 0 then
+                    begin                                
+                         frxDBDatasetAOBEST.Text := <ADOQueryOrderer."AVD_NAMN"> + '/' + <ADOQueryOrderer."ANV_NAMN">;                               
+                    end else
+                    begin
+                          frxDBDatasetAOBEST.Text := <ADOQueryOrderer."AVD_NAMN"> ;     
+                    end;                              
+               end else if  Length(<ADOQueryOrderer."ANV_NAMN">) > 0 then
+               begin
+                    frxDBDatasetAOBEST.Text := <ADOQueryOrderer."ANV_NAMN">;         
+               end else if Length( <ADOQueryOrderer."ANV_LOGIN">) > 0 then                                
+               begin
+                    frxDBDatasetAOBEST.Text := <ADOQueryOrderer."ANV_LOGIN">      
+               end else
+                   frxDBDatasetAOBEST.Text :=<ADOQueryMain."BEST">;                                                                 
+
+  
+end;
+
+procedure frxDBDatasetAOMOTOnBeforePrint(Sender: TfrxComponent);
+begin
+               if Length(<ADOQueryReceiver."AVD_NAMN">) > 0 then
+               begin
+                    if Length( <ADOQueryReceiver."ANV_NAMN">) > 0 then
+                    begin                                
+                         frxDBDatasetAOMOT.Text := <ADOQueryReceiver."AVD_NAMN"> + '/' + <ADOQueryReceiver."ANV_NAMN">;                               
+                    end else
+                    begin
+                          frxDBDatasetAOMOT.Text := <ADOQueryReceiver."AVD_NAMN"> ;     
+                    end;                              
+               end else if  Length(<ADOQueryReceiver."ANV_NAMN">) > 0 then
+               begin
+                    frxDBDatasetAOMOT.Text := <ADOQueryReceiver."ANV_NAMN">;         
+               end else if Length( <ADOQueryReceiver."ANV_LOGIN">) > 0 then  
+               begin
+                    frxDBDatasetAOMOT.Text := <ADOQueryReceiver."ANV_LOGIN">      
+               end else
+                     frxDBDatasetAOMOT.Text := <ADOQueryMain."MOT">                                              
+  
+end;
+       
+
+procedure ADOQueryStatusSTATUS_TEXTOnBeforePrint(Sender: TfrxComponent);
+begin
+            //Set color
+           ADOQueryStatusSTATUS_TEXT.Font.Color := <ADOQueryStatus."STATUS_COLOR">;  
+end;
+
+procedure ADOQueryStatusSTATUSBOXOnBeforePrint(Sender: TfrxComponent);
+begin
+            //Set color
+            if Length( <ADOQueryStatus."STATUS_COLOR"> ) > 2 then
+               begin                                         
+                       MemoSTATUSBOX.Color := <ADOQueryStatus."STATUS_COLOR">;
+                       MemoSTATUSBOX.Visible := True;                           
+               end else
+               begin
+                        //MemoSTATUSBOX.Color := clWhite;
+                        MemoSTATUSBOX.Visible := False;                                      
+               end                       
+end;    
+
+procedure frxReport1OnStartReport(Sender: TfrxComponent);
+begin
+          //Get the main SQL Command
+          ADOQueryMain.Close;                             
+          ADOQueryMain.SQL.TExt := <MainSQLCommand>;           
+          ADOQueryMain.Open;            
+
+end;
+              
+function FloatToTimeFormat(const AFloat: Double): string;
+var
+  h, m: Integer;
+begin
+  h := Trunc(AFloat);
+  m := Round(Frac(AFloat) * 60);
+  if m = 60 then
+  begin
+           Inc(h);
+           m := 0;
+  end;
+
+  Result := Format('%.2u%s%.2u', [h, ':', m]);
+end;
+
+
+
+    
+  
+
+begin
+
+end.
